@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Unit Converter</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Unit Converter</h1>
+        <nav>
+            <a href="url" th:href="@{/length}">Length</a>
+            <a href="url" th:href="@{/mass}">Mass</a>
+            <a href="url" th:href="@{/temp}">Temperature</a>
+
+            <div th:if="${request.getRequestURI().toString() != '/'}">
+                <form action="#" 
+                      th:action="@{${request.getRequestURI().toString()}}" 
+                      th:object="${form}" method="post"
+                      th:if="${request.getMethod() == 'GET'}">
+                    <fieldset>
+                        <legend th:utext="|<b>${#strings.toUpperCase(type)} FORM</b>|">Form</legend>
+                        <label for="value" th:utext="|Enter the <b>${type}</b> to convert: |">Enter value: </label>
+                        <input type="text" th:field="*{value}">
+
+                        <p>
+                            <label for="from" th:text="'Unit to convert from: '">unit</label>
+                            <select th:field="*{from}">
+                                <option th:each="m : ${magnitudes}" th:value="${m}" 
+                                        th:text="${m.toString()}">magnitude</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="to" th:text="'Unit to convert to: '">unit</label>
+                            <select th:field="*{to}">
+                                <option th:each="m : ${magnitudes}" th:value="${m}" 
+                                        th:text="${m.toString()}">magnitude</option>
+                            </select>
+                        </p>
+                        <p><input type="submit" value="Convert" ></p>
+                    </fieldset>
+                </form>
+
+                <div th:if="${request.getMethod() == 'POST'}">
+                    <p>Result of your calculation</p>
+                    <p th:text="|${form.getValue()}
+                       ${form.getFrom().getAbbreviation()} = 
+                       ${result} ${form.getTo().getAbbreviation()}|">text</p>
+                    <a th:href="@{${request.getRequestURI().toString()}}"/>Reset</a>
+                </div>
+
+            </div>
+
+
+        </nav>
+    </body>
+</html>
